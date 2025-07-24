@@ -2,6 +2,7 @@
 
 #include "Core.h"
 #include "Math\Vector2.h"
+#include "RTTI.h"
 
 // Actor 정의
 // 1. 위치 점령
@@ -9,8 +10,10 @@
 // 3. 엔진의 이벤트 함수 호출(BeginPlay/Tick/Draw)
 //
 
-class Engine_API Actor
+class Engine_API Actor : public RTTI		// 최근은 RTTI 가 아닌 Object 이름으로 자주 사용
 {
+	RTTI_DECLARATIONS(Actor, RTTI)			// 왼쪽은 자손, 오른쪽은 부모타입 지정
+
 public:
 	Actor();
 	virtual ~Actor();

@@ -5,12 +5,10 @@
 
 
 /*
-*	Todo: 2025년 7월 23일 작업할 것
-	- 키 입력 관리 (KeyState 배열)								- 완료
-	- 입력 확인 함수 (GetKey, GetKeyDown, GetKeyUp)			- 완료
-	- Entity 추가 (Actor)									
-	- 이벤트 함수 추가 (BeginPlay, Tick, Render)
-	- Level 추가 (가상 공간에 배치된 물체(Actor) 관리 객체)
+*	Todo: 2025년 7월 24일 작업할 것
+	- RTTI 적용
+	- Engine 싱글톤(Singleton) 구현
+	- 
 * 
 */
 class Level;

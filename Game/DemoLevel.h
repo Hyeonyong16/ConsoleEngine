@@ -3,6 +3,8 @@
 
 class DemoLevel : public Level
 {
+	RTTI_DECLARATIONS(DemoLevel, Level)
+
 public:
 	DemoLevel();
 };

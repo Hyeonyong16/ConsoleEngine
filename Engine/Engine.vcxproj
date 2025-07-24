@@ -176,12 +176,14 @@ xcopy $(OutDir)\*.dll ..\Lib\Engine\ /y</Command>
     <ClInclude Include="Core\Engine.h" />
     <ClInclude Include="Level\Level.h" />
     <ClInclude Include="Math\Vector2.h" />
+    <ClInclude Include="Core\RTTI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor\Actor.cpp" />
     <ClCompile Include="Core\Engine.cpp" />
     <ClCompile Include="Level\Level.cpp" />
     <ClCompile Include="Math\Vector2.cpp" />
+    <ClCompile Include="Core\RTTI.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

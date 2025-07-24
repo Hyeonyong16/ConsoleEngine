@@ -4,6 +4,7 @@
 void TestActor::Tick(float _deltaTime)
 {
 	Actor::Tick(_deltaTime);
+	super::Tick(_deltaTime);
 
 	std::cout << "TestActor::Tick, FPS: "
 		<< (1.0f / _deltaTime)
