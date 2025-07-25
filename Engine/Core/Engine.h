@@ -5,10 +5,8 @@
 
 
 /*
-*	Todo: 2025년 7월 24일 작업할 것
-	- RTTI 적용
-	- Engine 싱글톤(Singleton) 구현
-	- 
+*	Todo: 2025년 7월 25일 작업할 것
+	- 엔진을 싱글톤(singleton) 으로 만들기
 * 
 */
 class Level;
@@ -39,6 +37,9 @@ public:
 	// 종료 함수
 	void Quit();
 
+	// 싱글톤 접근 함수
+	static Engine& Get();
+
 private:
 	// 외부 공개 안할 함수
 	void ProcessInput();
@@ -56,4 +57,7 @@ private:
 
 	// 메인 레벨
 	Level* mainLevel = nullptr;
+
+	// 싱글톤 변수
+	static Engine* instance;
 };

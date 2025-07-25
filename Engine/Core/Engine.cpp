@@ -1,13 +1,28 @@
 #include "Engine.h"
 #include <iostream>
+#include <Windows.h>
 
 #include "Level\Level.h"
 
 // 단순 입력 처리(키보드)
 // 타이머(시간 계산)
 
+// 정적 변수 초기화
+Engine* Engine::instance = nullptr;
+
 Engine::Engine()
 {
+	instance = this;
+
+	// 콘솔 커서 끄기
+	CONSOLE_CURSOR_INFO info;
+	info.bVisible = false;
+	info.dwSize = 1;
+
+	SetConsoleCursorInfo(
+		GetStdHandle(STD_OUTPUT_HANDLE),
+		&info
+	);
 }
 
 Engine::~Engine()
@@ -78,6 +93,13 @@ void Engine::Run()
 		}
 
 	}
+
+	// 정리
+	// 텍스트 색상 원래대로 돌려놓기
+	SetConsoleTextAttribute(
+		GetStdHandle(STD_OUTPUT_HANDLE),
+		FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED
+	);
 }
 
 void Engine::AddLevel(Level* _newLevel)
@@ -112,6 +134,12 @@ void Engine::Quit()
 	isQuit = true;
 }
 
+Engine& Engine::Get()
+{
+	// TODO: 여기에 return 문을 삽입합니다.
+	return *instance;
+}
+
 void Engine::ProcessInput()
 {
 	// 키 입력 확인
@@ -141,14 +169,20 @@ void Engine::Tick(float _deltaTime)
 		mainLevel->Tick(_deltaTime);
 	}
 
-	if (GetKeyDown(VK_ESCAPE))
+	/*if (GetKeyDown(VK_ESCAPE))
 	{
 		Quit();
-	}
+	}*/
 }
 
 void Engine::Render()
 {
+	// 프레임 시작 시 텍스트 색상을 흰색으로
+	SetConsoleTextAttribute(
+		GetStdHandle(STD_OUTPUT_HANDLE),
+		FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED
+	);
+
 	if (nullptr != mainLevel)
 	{
 		mainLevel->Render();
