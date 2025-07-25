@@ -17,6 +17,7 @@ void TestActor::Tick(float _deltaTime)
 		<< (1.0f / _deltaTime)
 		<< "\n";*/
 
+	// TestActor 키 입력 처리
 	if (Engine::Get().GetKey(VK_RIGHT) && GetPosition().x < 30)
 	{
 		Vector2 position = GetPosition();
