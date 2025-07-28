@@ -21,10 +21,15 @@ enum class Color
 
 class Engine_API Actor : public RTTI		// 최근은 RTTI 가 아닌 Object 이름으로 자주 사용
 {
+	friend class Level;
 	RTTI_DECLARATIONS(Actor, RTTI)			// 왼쪽은 자손, 오른쪽은 부모타입 지정
 
 public:
-	Actor(const char _image = ' ', Color _color = Color::White);
+	Actor(
+		const char _image = ' ',
+		Color _color = Color::White,
+		const Vector2& _position = Vector2::Zero
+	);
 	virtual ~Actor();
 
 	// 이벤트 함수
@@ -39,10 +44,18 @@ public:
 	void SetPosition(const Vector2& _newPosition);
 	Vector2 GetPosition() const;
 
+	// SortingOrder 설정 함수
+	// 숫자가 클수록 카메라에 가까움
+	inline unsigned int GetSortingOrder() const { return sortingOrder; }
+	void SetSortingOrder(unsigned int _sortingOrder);
+
 private:
 	Vector2 position;	// 개체의 위치
 	char image = ' ';	// 그릴 값
 	Color color;		// 텍스트 색상 값
+
 	bool hasBeganPlay = false; // BeginPlay 호출이 되었는지 확인
+
+	unsigned int sortingOrder = 0; // 정렬 순서
 };
 

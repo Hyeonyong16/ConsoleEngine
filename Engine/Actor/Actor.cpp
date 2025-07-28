@@ -3,8 +3,8 @@
 #include <iostream>
 #include <Windows.h>
 
-Actor::Actor(const char _image, Color _color)
-	: image(_image), color(_color)
+Actor::Actor(const char _image, Color _color, const Vector2& _position)
+	: image(_image), color(_color), position(_position)
 { }
 
 Actor::~Actor()
@@ -66,4 +66,9 @@ void Actor::SetPosition(const Vector2 & _newPosition)
 Vector2 Actor::GetPosition() const
 {
 	return position;
+}
+
+void Actor::SetSortingOrder(unsigned int _sortingOrder)
+{
+	sortingOrder = _sortingOrder;
 }

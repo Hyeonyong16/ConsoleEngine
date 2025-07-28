@@ -11,6 +11,8 @@ public:
 	Vector2 operator+(const Vector2& _other) const;
 	Vector2 operator-(const Vector2& _other) const;
 
+	bool operator==(const Vector2& _other) const;
+
 	// 문자열로 출력
 	const char* ToString();
 

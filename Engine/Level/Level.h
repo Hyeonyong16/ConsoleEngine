@@ -23,6 +23,10 @@ public:
 	virtual void Render();
 
 private:
+	// SortingOrder 로 Actors 정렬
+	void SortActorsBySortingOrder();
+
+private:
 	std::vector<Actor*> actors; //레벨에 배치된 모든 액터를 관리하는 배열
 
 };

@@ -1,6 +1,8 @@
 #include <iostream>
 #include "Engine.h"
-#include "DemoLevel.h"
+#include "Demo/DemoLevel.h"
+#include "Level/SokobanLevel.h"
+
 
 int main()
 {
@@ -8,6 +10,7 @@ int main()
 	//_CrtSetBreakAlloc(18);
 
 	Engine engine;
-	engine.AddLevel(new DemoLevel());
+	//engine.AddLevel(new DemoLevel());
+	engine.AddLevel(new SokobanLevel());
 	engine.Run();
 }

@@ -31,6 +31,11 @@ Vector2 Vector2::operator-(const Vector2& _other) const
 	return Vector2(x - _other.x, y - _other.y);
 }
 
+bool Vector2::operator==(const Vector2& _other) const
+{
+	return x == _other.x && y == _other.y;
+}
+
 // Vector 를 문자열로 출력
 const char* Vector2::ToString()
 {

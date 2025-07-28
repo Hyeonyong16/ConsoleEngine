@@ -23,3 +23,14 @@
 #else
 #define Engine_API __declspec(dllimport)
 #endif
+
+// 메모리 정리 함수
+template<typename T>
+void SafeDelete(T*& _target)
+{
+	if (nullptr != _target)
+	{
+		delete _target;
+		_target = nullptr;
+	}
+}
