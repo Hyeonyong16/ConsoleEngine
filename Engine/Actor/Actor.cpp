@@ -1,7 +1,11 @@
 #include "Actor.h"
+#include "Utils/Utils.h"
+#include "Engine.h"
 
 #include <iostream>
 #include <Windows.h>
+
+
 
 Actor::Actor(const char _image, Color _color, const Vector2& _position)
 	: image(_image), color(_color), position(_position)
@@ -34,10 +38,12 @@ void Actor::Render()
 	COORD coord = { (short)position.x, (short)position.y };
 	
 	// 커서 이동
-	SetConsoleCursorPosition(handle, coord);
+	//SetConsoleCursorPosition(handle, coord);
+	Utils::SetConsolePosition(coord);
 	
 	// 색상 설정
-	SetConsoleTextAttribute(handle, (WORD)color);
+	//SetConsoleTextAttribute(handle, (WORD)color);
+	Utils::SetConsoleTextColor(static_cast<WORD>(color));
 
 	// 그리기
 	std::cout << image;
@@ -52,10 +58,8 @@ void Actor::SetPosition(const Vector2 & _newPosition)
 	COORD coord = { (short)position.x, (short)position.y };
 
 	// 커서 이동
-	SetConsoleCursorPosition(handle, coord);
-
-	// 색상 설정
-	SetConsoleTextAttribute(handle, (WORD)color);
+	//SetConsoleCursorPosition(handle, coord);
+	Utils::SetConsolePosition(coord);
 
 	// **임시** 기존 글씨를 지우고 이동
 	std::cout << ' ';
@@ -71,4 +75,19 @@ Vector2 Actor::GetPosition() const
 void Actor::SetSortingOrder(unsigned int _sortingOrder)
 {
 	sortingOrder = _sortingOrder;
+}
+
+void Actor::SetOwner(Level* _newOwner)
+{
+	owner = _newOwner;
+}
+
+Level* Actor::GetOwner()
+{
+	return owner;
+}
+
+void Actor::QuitGame()
+{
+	Engine::Get().Quit();
 }

@@ -34,3 +34,13 @@ void SafeDelete(T*& _target)
 		_target = nullptr;
 	}
 }
+
+template<typename T>
+void SafeDeleteArray(T*& _target)
+{
+	if (nullptr != _target)
+	{
+		delete[] _target;
+		_target = nullptr;
+	}
+}

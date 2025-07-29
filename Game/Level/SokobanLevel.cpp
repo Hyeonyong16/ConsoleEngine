@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include "Math/Vector2.h"
+#include "Utils/Utils.h"
 
 #include "Actor/Player.h"
 #include "Actor/Wall.h"
@@ -15,7 +16,22 @@
 
 SokobanLevel::SokobanLevel()
 {
-	ReadMapFile("Map.txt");
+	//ReadMapFile("Map.txt");
+	ReadMapFile("Stage1.txt");
+}
+
+void SokobanLevel::Render()
+{
+	super::Render();
+
+	// 게임 클리어 시 클리어 처리
+	if (isGameClear)
+	{
+		Utils::SetConsolePosition({ 30, 0 });
+		Utils::SetConsoleTextColor(static_cast<WORD>(Color::White));
+
+		std::cout << "Game Clear!";
+	}
 }
 
 void SokobanLevel::ReadMapFile(const char* _fileName)
@@ -25,7 +41,7 @@ void SokobanLevel::ReadMapFile(const char* _fileName)
 	sprintf_s(filePath, 256, "../Assets/%s", _fileName);
 
 	FILE* file = nullptr;
-	fopen_s(&file, filePath, "rb");
+	fopen_s(&file, filePath, "rt");
 
 	// 예외처리
 	if (nullptr == file)
@@ -46,11 +62,11 @@ void SokobanLevel::ReadMapFile(const char* _fileName)
 	memset(buffer, 0, fileSize + 1);
 	size_t readSize = fread(buffer, sizeof(char), fileSize, file);
 
-	// 파일 크기와 읽어들인 크기가 다른 경우
-	if (fileSize != readSize)
-	{
-		std::cout << "fileSize is not matched with readSize\n";
-	}
+	//// 파일 크기와 읽어들인 크기가 다른 경우
+	//if (fileSize != readSize)
+	//{
+	//	std::cout << "fileSize is not matched with readSize\n";
+	//}
 
 	// 배열 순회를 위한 인덱스 변수
 	int index = 0;
@@ -74,8 +90,6 @@ void SokobanLevel::ReadMapFile(const char* _fileName)
 			++position.y;
 			position.x = 0;
 
-			// @Todo: 테스트용도. 나중에 삭제해야함.
-			std::cout << "\n";
 			continue;
 		}
 
@@ -83,6 +97,7 @@ void SokobanLevel::ReadMapFile(const char* _fileName)
 		switch (mapCharacter)
 		{
 		case '#':	// 벽
+		case '1':
 			AddActor(new Wall(position));
 			break;
 		case '.':	// 바닥
@@ -98,6 +113,8 @@ void SokobanLevel::ReadMapFile(const char* _fileName)
 			break;
 		case 't':	// 타겟
 			AddActor(new Target(position));
+			// 목표 점수 증가 처리
+			++targetScore;
 			break;
 		}
 
@@ -110,4 +127,145 @@ void SokobanLevel::ReadMapFile(const char* _fileName)
 
 	// 파일 닫기
 	fclose(file);
+}
+
+bool SokobanLevel::CheckGameClear()
+{
+	// 박스가 타겟 위치에 모두 옮겨졌는지 확인
+	int currentScore = 0;
+
+	// 타겟 액터 벡터에 저장
+	std::vector<Actor*> targetActors;
+	std::vector<Actor*> boxActors;
+	for (Actor* const actor : actors)
+	{
+		// 타겟 액터이지 확인
+		if (actor->As<Target>())
+		{
+			targetActors.emplace_back(actor);
+		}
+
+		// 박스 액터인지 확인
+		else if (actor->As<Box>())
+		{
+			boxActors.emplace_back(actor);
+		}
+	}
+
+	// 박스와 타겟 액터 위치 비교
+	for (Actor* const targetActor : targetActors)
+	{
+		for (Actor* const boxActor : boxActors)
+		{
+			// 두 액터의 위치가 같으면 점수 증가 처리
+			if (targetActor->GetPosition() == boxActor->GetPosition())
+			{
+				// 점수 증가
+				++currentScore;
+			}
+		}
+	}
+
+	return currentScore == targetScore;
+}
+
+bool SokobanLevel::CanPlayerMove(const Vector2& _playerPosition, const Vector2& _newPosition)
+{
+	// 게임 클리어 여부 확인 및 종료 처리
+	if (isGameClear)
+	{
+		return false;
+	}
+
+	// Box 처리
+	std::vector<Box*> boxActors;
+	for (Actor* const actor : actors)
+	{
+		Box* box = actor->As<Box>();
+		if (box)
+		{
+			boxActors.emplace_back(box);
+		}
+	}
+
+	// 이동하려는 위치에 박스가 있는지 확인
+	Box* searchedBox = nullptr;
+	for (Box* const boxActor : boxActors)
+	{
+		// 플레이어가 이동하려는 위치와 박스의 위치가 같은지 비교
+		if (boxActor->GetPosition() == _newPosition)
+		{
+			// 같은 위치에 있는 박스 저장 후 루프 종료
+			searchedBox = boxActor;
+			break;
+		}
+	}
+
+	// 이동하려는 위치에 박스가 있는 경우 처리
+	if (nullptr != searchedBox)
+	{
+		// #1 : 박스를 이동시키려는 위치에 다른 박스가 또 있는지 확인
+		Vector2 direction = _newPosition - _playerPosition;
+		Vector2 nextPosition = searchedBox->GetPosition() + direction;
+
+		for (Box* const otherBox : boxActors)
+		{
+			// 같은 박스는 건너뛰기
+			if (otherBox == searchedBox)
+			{
+				continue;
+			}
+
+			// 박스를 이동시키려는 위치에 다른 박스가 있는지 확인
+			if (otherBox->GetPosition() == nextPosition)
+			{
+				// 플레이어 이동 못함
+				return false;
+			}
+		}
+
+		for (Actor* const actor : actors)
+		{
+			if (actor->GetPosition() == nextPosition)
+			{ 
+				// #2 : 박스는 없지만, 벽이 있지 않은지 확인
+				if (actor->As<Wall>())
+				{
+					// 플레이어 이동 못함
+					return false;
+				}
+
+				// #3 : 이동 가능한 경우(그라운드, 타겟)에는 박스 이동 처리
+				if (actor->As<Ground>() || actor->As<Target>())
+				{
+					// 박스 이동 처리
+					searchedBox->SetPosition(nextPosition);
+
+					// 게임 클리어 여부 확인
+					isGameClear = CheckGameClear();
+
+					// 플레이어 이동 가능
+					return true;
+				}
+			}
+		}
+	}
+
+	// 플레이어가 이동하려는 위치에 박스가 없는 경우
+	for (Actor* const actor : actors)
+	{
+		if (actor->GetPosition() == _newPosition)
+		{
+			// 벽이면 이동 불가
+			if (actor->As<Wall>())
+			{
+				return false;
+			}
+
+			// 그라운드 or 타겟
+			return true;
+		}
+	}
+
+	return false;
 }

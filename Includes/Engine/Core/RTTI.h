@@ -39,6 +39,9 @@ public:
 	}
 };
 
+// static int runTimeTypeId
+// static 으로 전역 변수를 선언해서 해당 변수의 주소값으로 확인 
+//	- 동일한 객체들은 다 같은 전역 변수를 가리키니까 해당 주소값이 같은걸로 타입 판별
 #define RTTI_DECLARATIONS(Type, ParentType)												\
 public:																					\
 	using super = ParentType;															\

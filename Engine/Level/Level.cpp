@@ -7,10 +7,6 @@ Level::Level()
 
 Level::~Level()
 { 
-	/*for (int i = 0; i < actors.size(); ++i)
-	{
-		SafeDelete(actors[i]);
-	}*/
 	for (Actor* actor : actors)
 	{
 		SafeDelete(actor);
@@ -25,6 +21,8 @@ void Level::AddActor(Actor* _newActor)
 	// 예외처리(중복 여부 확인) 필요
 	actors.emplace_back(_newActor);	// emplace_back 은 이동, push_back 은 참조 - 이동이 성능이 좋음
 
+	// 오너십 설정
+	_newActor->SetOwner(this);
 }
 
 // 엔진 이벤트 함수
@@ -89,6 +87,7 @@ void Level::Render()
 	}
 }
 
+// SortingOrder 에 따른 Actor 정렬
 void Level::SortActorsBySortingOrder()
 {
 	// 버블 정렬

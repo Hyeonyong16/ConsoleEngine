@@ -18,7 +18,7 @@ void TestActor::Tick(float _deltaTime)
 		<< "\n";*/
 
 	// TestActor 키 입력 처리
-	if (Engine::Get().GetKey(VK_RIGHT) && GetPosition().x < 30)
+	/*if (Engine::Get().GetKey(VK_RIGHT) && GetPosition().x < 30)
 	{
 		Vector2 position = GetPosition();
 		position.x += 1;
@@ -49,5 +49,5 @@ void TestActor::Tick(float _deltaTime)
 	if (Engine::Get().GetKeyDown(VK_ESCAPE))
 	{
 		Engine::Get().Quit();
-	}
+	}*/
 }

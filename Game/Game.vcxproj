@@ -100,14 +100,17 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)\;$(SolutionDir)\Includes\Engine\Core\;$(SolutionDir)\Includes\Engine\;$(SolutionDir)\Includes\;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Engine.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Lib\Engine\;</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy ..\Lib\Engine\Engine.dll $(OutDir)\ /y</Command>
+      <Command>xcopy ..\Lib\Engine\Engine.dll $(OutDir)\ /y
+xcopy $(SolutionDir)\Assets $(OutDir)..\Assets\ /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -134,14 +137,17 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)\;$(SolutionDir)\Includes\Engine\Core\;$(SolutionDir)\Includes\Engine\;$(SolutionDir)\Includes\;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Engine.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Lib\Engine\;</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy ..\Lib\Engine\Engine.dll $(OutDir)\ /y</Command>
+      <Command>xcopy ..\Lib\Engine\Engine.dll $(OutDir)\ /y
+xcopy $(SolutionDir)\Assets $(OutDir)..\Assets\ /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -166,6 +172,8 @@
     <ClCompile Include="Actor\Box.cpp" />
     <ClCompile Include="Demo\DemoLevel.cpp" />
     <ClCompile Include="Actor\Ground.cpp" />
+    <ClCompile Include="Game\Game.cpp" />
+    <ClCompile Include="Level\MenuLevel.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Demo\TestActor.cpp" />
     <ClCompile Include="Level\SokobanLevel.cpp" />
@@ -178,6 +186,9 @@
     <ClInclude Include="Demo\DemoLevel.h" />
     <ClInclude Include="Demo\TestActor.h" />
     <ClInclude Include="Actor\Ground.h" />
+    <ClInclude Include="Game\Game.h" />
+    <ClInclude Include="Interface\ICanPlayerMove.h" />
+    <ClInclude Include="Level\MenuLevel.h" />
     <ClInclude Include="Level\SokobanLevel.h" />
     <ClInclude Include="Actor\Player.h" />
     <ClInclude Include="Actor\Wall.h" />

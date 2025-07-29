@@ -19,6 +19,9 @@ enum class Color
 	Intensity = 8,
 };
 
+// 전방선언
+class Level;
+
 class Engine_API Actor : public RTTI		// 최근은 RTTI 가 아닌 Object 이름으로 자주 사용
 {
 	friend class Level;
@@ -49,13 +52,22 @@ public:
 	inline unsigned int GetSortingOrder() const { return sortingOrder; }
 	void SetSortingOrder(unsigned int _sortingOrder);
 
+	// 오너십 설정
+	void SetOwner(Level* _newOwner);
+	Level* GetOwner();
+	
+	// 게임 종료 요청 함수
+	void QuitGame();
+
 private:
-	Vector2 position;	// 개체의 위치
-	char image = ' ';	// 그릴 값
-	Color color;		// 텍스트 색상 값
+	Vector2 position;				// 개체의 위치
+	char image = ' ';				// 그릴 값
+	Color color;					// 텍스트 색상 값
 
-	bool hasBeganPlay = false; // BeginPlay 호출이 되었는지 확인
+	bool hasBeganPlay = false;		// BeginPlay 호출이 되었는지 확인
 
-	unsigned int sortingOrder = 0; // 정렬 순서
+	unsigned int sortingOrder = 0;	// 정렬 순서
+
+	Level* owner = nullptr;			// 소유 레벨(오너십)
 };
 
