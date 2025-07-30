@@ -39,6 +39,9 @@ Engine::Engine()
 
 	// 콘솔 창 이벤트 등록
 	SetConsoleCtrlHandler(ConsoleMessageProcedure, TRUE);
+
+	// 엔진 설정 로드
+	LoadEngineSettings();
 }
 
 Engine::~Engine()
@@ -60,7 +63,7 @@ void Engine::Run()
 	QueryPerformanceFrequency(&frequency);
 
 	// 타겟 프레임
-	float targetFrameRate = 60.f;
+	float targetFrameRate = settings.framerate == 0.0f ? 60.0f : settings.framerate;
 
 	// 타겟 한 프레임 시간
 	float oneFrameTime = 1.f / targetFrameRate;
@@ -91,6 +94,11 @@ void Engine::Run()
 			BeginPlay();
 			Tick(deltaTime);
 			Render();
+
+			// 제목에 FPS 출력
+			char title[50] = { };
+			sprintf_s(title, 50, "FPS: %f", (1.0f / deltaTime));
+			SetConsoleTitleA(title);
 
 			// 시간 업데이트
 			previousTime = currentTime;
@@ -163,4 +171,73 @@ void Engine::Render()
 	{
 		mainLevel->Render();
 	}
+}
+
+void Engine::LoadEngineSettings()
+{
+	FILE* file = nullptr;
+	fopen_s(&file, "../Settings/EngineSettings.txt", "rt");
+	if (nullptr == file)
+	{
+		std::cout << "Failed to load engine settings.\n";
+		__debugbreak();
+		return;
+	}
+
+	// 로드
+
+	// FP(File Position) 포인터를 가장 뒤로 옮기기
+	fseek(file, 0, SEEK_END);
+
+	// 이 위치 구하기
+	size_t fileSize = ftell(file);
+
+	// 다시 첫 위치로 되돌리기
+	rewind(file);
+
+	// 파일 내용을 저장할 버퍼 할당
+	char* buffer = new char[fileSize + 1];
+	memset(buffer, 0, fileSize + 1);
+
+	// 내용 읽기
+	size_t readSize = fread(buffer, sizeof(char), fileSize, file);
+
+	// 파싱(Parcing, 구문 해석 -> 필요한 정보를 얻는 과정)
+	char* context = nullptr;
+	char* token = nullptr;
+
+	token = strtok_s(buffer, "\n", &context);
+
+	// 구문 분석
+	while (nullptr != token)
+	{
+		// 키/값 분리
+		char header[10] = { };
+
+		// 아래 구문이 제대로 동작하려면 키와 값 사이의 빈칸이 있어야 함
+		sscanf_s(token, "%s", header, 10);
+
+		// 헤더 문자열 비교
+		if (strcmp(header, "framerate") == 0)
+		{
+			sscanf_s(token, "frameRate = %f", &settings.framerate);
+		}
+		else if (strcmp(header, "width") == 0)
+		{
+			sscanf_s(token, "width = %d", &settings.width);
+		}
+		else if (strcmp(header, "height") == 0)
+		{
+			sscanf_s(token, "height = %d", &settings.height);
+		}
+
+		// 그 다움줄 분리
+		token = strtok_s(nullptr, "\n", &context);
+	}
+
+	// 버퍼 해제
+	SafeDeleteArray(buffer);
+
+	// 파일 닫기
+	fclose(file);
 }

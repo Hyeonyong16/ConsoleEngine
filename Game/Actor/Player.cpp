@@ -44,7 +44,6 @@ void Player::Tick(float _deltaTime)
 	}
 
 	// 입력처리
-	
 	// 이동 로직 - 이동하기 전에 이동할 위치로 갈 수 있는지 판단 후 이동
 	if (Input::Get().GetKeyDown(VK_RIGHT))
 	{
